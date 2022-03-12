@@ -26,32 +26,39 @@ Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 
 ## Day1
 Carry Lookahead Adder (CLA) or parallel adder is faster than the normal Full Adder. Unlike normal Full Adder the CLA does not have to wait for the previous carry bit to be calculated. In Carry Lookahead Adder all carry bits are calculated in parallel before calculating the sum. It takes advantage of computational parallelization at the cost of power consumption and circuit complexity. Transistor size must be carefully selected to reach the needed performance.
-![]theory/1.1 PLL internal components.png)
+![]theory/1.1PLL_internal_components.png)
 ## Part1 Introduction to PLL
 
 I will be designing a 4-bit Carry Lookahead Adder by using conventional static CMOS. The proposed circuit will be implemented in Synopsys EDA tool and will be done using 28nm technology. Basic element of the circuit is implemented using NMOS and PMOS. Looking at the diagram in Figure 1, the general formula for carry-out bits can be written as: 𝐶𝑖+1 = 𝐶𝑖 (𝐴𝑖 + 𝐵𝑖 ) + 𝐴𝑖𝐵𝑖. Once the carry-out bits have been calculated, the sums are found using the simple XOR operation. Although the equation is similar to equations of 4-bit Ripple Carry Adder (RCA), the transistor level design methodology presented in this section will transform the RCA equations into CLA process.
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/1.1PLL.png)
 ## Part2 Introduction to Phase Frequency Detector
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/PFD_schematic.png)
+![](theory/1.2PFD_diff_freq.png)
+![](theory/1.2PFD_lagging_and_leading.png)
 
 
 ## Part3 Introduction to Charge Pump
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/CP_schematic.png)
 
 ## Part4 Introduction to Voltage Controlled Oscillator and Frequency Divider
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/VCO_schematic.png)
+![](pll_workshop/FD_schematic.png)
+![](theory/1.4Frequency_divider.png)
 
 
 ## Part5 Tool Setup and Design Flow
-![](pll_workshop/pll_workshops.png)
+![](theory/1.5Tools_Setup.png)
+![](theory/1.5Tools_Command.png)
+![](theory/1.5Development_Flow.png)
 
 
 
 ## Part6 Introduction to PDK, specifications and pre-layout circuits
-![](pll_workshop/pll_workshops.png)
+![](theory/1.6PLL_Specifications.png)
+![](theory/1.6PLL_Specifications.png)
 
 ## Part7 Circuit design simulation tool Ngspice Setup
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/PFD_files.png)
 
 ## Part8 Layout design tool Magic Setup
 ![](pll_workshop/pll_workshops.png)
