@@ -1,7 +1,7 @@
 # PLL_IC_design_on_open_source_google_skywater_using_130nm_Workshop
 Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 
- - [Day 1: PLL Theory and Lab setup](#Day1:-PLL-Theory-and-Lab-setup)
+ - [Day 1: PLL Theory and Lab setup](#Day1)
   * [Part 1: Introduction to PLL](#reference-circuit-details)
   * [Part 2: Introduction to Phase Frequency Detector](#reference-circuit-diagram)
   * [Part 3: Introduction to Charge Pump](#reference-circuit-waveform)
@@ -25,7 +25,7 @@ Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
   * [Part 19: Tapeout labs](#references)
 
 
-## Day 1: PLL Theory and Lab setup
+## Day1
 Carry Lookahead Adder (CLA) or parallel adder is faster than the normal Full Adder. Unlike normal Full Adder the CLA does not have to wait for the previous carry bit to be calculated. In Carry Lookahead Adder all carry bits are calculated in parallel before calculating the sum. It takes advantage of computational parallelization at the cost of power consumption and circuit complexity. Transistor size must be carefully selected to reach the needed performance.
 
 ## Reference Circuit Details
