@@ -25,36 +25,93 @@ Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 
 
 ## Day1
-Carry Lookahead Adder (CLA) or parallel adder is faster than the normal Full Adder. Unlike normal Full Adder the CLA does not have to wait for the previous carry bit to be calculated. In Carry Lookahead Adder all carry bits are calculated in parallel before calculating the sum. It takes advantage of computational parallelization at the cost of power consumption and circuit complexity. Transistor size must be carefully selected to reach the needed performance.
+The first day of the Workshop was dedicated towards acquainting us with the concepts related to PLL such as its internal components, their working, the uses of PLL and why it is advantageous over other methods of frequency generation. A brief introduction to the two softwaress; NgSPICE and Magic was also provided, along with installation and setup instructions.
 ![]theory/1.1PLL_internal_components.png)
 ## Part1 Introduction to PLL
+Phase-locked loops (PLL) is a control system in which the output signal is based on the input signal and a feedback reference. It is used extensively to generate a precise clock signal with a clear spectrum (i.e., without phase or frequency noise), over a wide range of frequencies.
 
-I will be designing a 4-bit Carry Lookahead Adder by using conventional static CMOS. The proposed circuit will be implemented in Synopsys EDA tool and will be done using 28nm technology. Basic element of the circuit is implemented using NMOS and PMOS. Looking at the diagram in Figure 1, the general formula for carry-out bits can be written as: 𝐶𝑖+1 = 𝐶𝑖 (𝐴𝑖 + 𝐵𝑖 ) + 𝐴𝑖𝐵𝑖. Once the carry-out bits have been calculated, the sums are found using the simple XOR operation. Although the equation is similar to equations of 4-bit Ripple Carry Adder (RCA), the transistor level design methodology presented in this section will transform the RCA equations into CLA process.
+Quartz crystals and Voltage-Controlled Oscillators (VCO) can be used to generate clock pulse.
+Quartz crystals have pure spectum but can only generate one frequency.
+VCOs can be controlled with an input voltage signal. However, they tend to have noise in their frequency spectrum.
 ![](pll_workshop/1.1PLL.png)
+Intuition : PLLs mimics the reference frequency it is provided, while maintaining a clean frequency spectrum. Mimicking a reference frequency refers to producing output frequency which is either equal to or an integral multiple of the reference frequency.
 ## Part2 Introduction to Phase Frequency Detector
 ![](pll_workshop/PFD_schematic.png)
+The Phase Frequency Detector (PFD) is used to compare the input reference signal and output feedback signal and generate a control signal. It measures the phase difference between Reference (REF) and Output (OUT) signal, using an XOR gate.
+The XOR gate help us detect differences in phase, but we do not have an idea about whether the Output signal is leading or lagging the Reference.
+This issue is resolved using 2 different outputs; UP and DOWN.
+'Up' signal stays HIGH between falling edge of REF and falling edge of OUT.
+'Down'signal stays HIGH between falling edge of OUT and falling edge of REF.
+Dead Zone : If the 2 signals input the PFD are very close, i.e., separated by a very small difference in phase, then output waveform gets clipped. This zone is called 'Dead Zone'.
+More sensitive PFD results in better PLL.
 ![](theory/1.2PFD_diff_freq.png)
 ![](theory/1.2PFD_lagging_and_leading.png)
 
 
 ## Part3 Introduction to Charge Pump
 ![](pll_workshop/CP_schematic.png)
-
+Charge Pump is defined as a kind of DC-to-DC converter that uses capacitors for energetic charge storage to raise or lower voltage.
+They can be modelled as a combination of 2 ideal current sources, which are controlled by 2 switches.
+In a PLL, it is used to convert the digital measure of phase/frequency difference into an analog signal to control the VCO.
+The capacitor across the Output is used to smoothen the Output Voltage swing.
+To further smoothen the voltage swing, a low-pass filter, called as Loop Filter, can be used.
+Output of charge pump controls the VCO. Higher o/p voltage results in faster charging of VCO and hence higher frequency and vice-versa.
+Assumptions : - Cx= C/10 - Loop filter bandwidth = 1/(1 + R.C1), where C1 = C . Cx / (C + Cx)
 ## Part4 Introduction to Voltage Controlled Oscillator and Frequency Divider
 ![](pll_workshop/VCO_schematic.png)
+A voltage-controlled oscillator (VCO) is an electronic oscillator whose output frequency is proportional to its input voltage. An oscillator produces a periodic AC signal, and in VCOs, the oscillation frequency is determined by voltage.
+Period = 2 * delay * no. of inverters, where delay is time taken to charge the output capacitor of charge pump.
+
+Frequency depends on delay, which inturn is dependent on current supplied.
+
+In the given 3 stage inverter, output flips by 'pi radians' in only half the oscillation period.
+A frequency divider, also called a clock divider or scaler or prescaler, is a circuit that takes an input signal of a frequency, f, and generates an output signal of a frequency : nf, where n is some factor.
+
 ![](pll_workshop/FD_schematic.png)
 ![](theory/1.4Frequency_divider.png)
+Implemented using a T flip-flop.
 
+Output frequency of T flip-flop is half the frequency of the input signal.
+
+IMPORTANT TERMS:
+
+Lock range : Lock stage is defined as the stage where the o/p is mimicking the i/p. The range of frequencies over which the PLL is able to follow i/p frequency variations once loacked is called as lock range.
+
+Capture range : The range of frequencies for which the PLL is able to attain a lock state from an unlocked state. It depends on filter bandwidth.
+
+Lock range > Capture Range
+
+Settling time : The time within which a PLL is able to attain a lock from an initially unlocked state. It depends on how quickly charge pump rises to its stable value.
 
 ## Part5 Tool Setup and Design Flow
 ![](theory/1.5Tools_Setup.png)
 ![](theory/1.5Tools_Command.png)
 ![](theory/1.5Development_Flow.png)
+Advisable to build any software tool from its source code as it will be the latest version with all the updates and patches.
 
+Tools used:
+
+NgSPICE - Transistor-level circuit simulation
+Magic - Parasitic design & extraction
+Steps to install NgSPICE: Type sudo apt-get install ngspice in the Terminal.
+
+Steps to install Magic:
+
+To update the OS : sudo apt-get update && sudo apt-get upgrade
+Clone the Magic Repository : git clone git://opencircuitdesign.com/magic
+Install the csh shell : sudo apt-get install csh
+Entering the correct directory : cd magic
+./configure
+make to compile.
+sudo make install to install magic on the device.
 
 
 ## Part6 Introduction to PDK, specifications and pre-layout circuits
 ![](theory/1.6PLL_Specification.png)
+SKY130 PDK is used.
+PDK or process design kit is a set of files used within the semiconductor industry to model a fabrication process for the design tools used to design an integrated circuit.
+PDK conatins transistor characteristics and other information such as standard cells, their timing information, their layouts, corresponding Verilogs and so on.
+Transistor characteristics :
 ![](skywater_pdk.png)
 
 ## Part7 Circuit design simulation tool Ngspice Setup
@@ -453,10 +510,33 @@ To make a port, draw a box around the label and type port make in the magic comm
 
 We need to make ports because when we extract the parasitics from our design, the input and output ports will automatically have these names as we have labelled them as ports.
 ## Part14 Layout Walkthrough
+
+
+Open the magic (.mag) files for the previously designed circuits:
+Frequency Divider
+Phase Frequency Detector
+On the right side, there are two similar drawings on the top and on the bottom, which are additional buffers required for getting full swing.
+Charge Pump
+Top most long transistor is just for enabling or disabling the charge pump.
+Right below it is the upper current source. This much difference in the size of the transistor for the current source is to allow maximum current for the charging and discharging process.
+Two inverters on the left create the UPz and the DOWNz signals (UPz = up bar and DOWNz = down bar or their inverted variants).
+Voltage Controlled Oscillator
+There are seven inverters to reduce the range of frequencies that we are dealing with.
+There is an additional inverter at the end which helps to obtain a full swing for the output.
+At the top there is a small PMOS that acts as an enable or disable for the VCO.
+Assessment Question
+Copy the "FD.mag" file in the directory where the technology file "sky130A.tech" is placed.
+Open the Terminal in this directory.
+Open the FD layout file. Type magic -T sky130A.tech FD.mag in the Terminal.
+The layout looks something like this.
 ![](pll_workshop/FD_layout.png)
 ![](pll_workshop/CP_layout.png)
 ![](pll_workshop/VCO_layout.png)
 ![](pll_workshop/PFD_layout.png)
+Now left-click on the bottom left-corner of the layout and right-click on the top right-corner of the layout.
+Go to the Magic Terminal and type box command, which gives the area.
+
+The area in sq. um is given as 29.70 and hence it is the answer.
 ## Part15 Parasitic Extraction
 ![](pll_workshop/PFD_layoutspice.png)
 ## Part16 Post Layout simulations
@@ -464,6 +544,32 @@ We need to make ports because when we extract the parasitics from our design, th
 ![](pll_workshop/PFD_postwaveform2.png)
 ## Part17 Steps to combine layouts
 ![](pll_workshop/PLL_layout.png)
+Open Magic using the command magic -T sky130A.tech in the Terminal.
+Use 'place instance' options present in 'cells'. The 'place instace' is used to place one or more pre-created circuit layouts in the Magic window.
+Press the "I" button and then the "X" button on the keyboard to open the circuit or to make the circuit visible.
+Now open all layouts in the same window.
+Make quick connections using the wire tool. To access the wire tool press the space bar once and to exit the wire tool press the space bar three more times.
+Extend the layers to make connections between the subcircuits.
+In the final PLL design:
+
+On the right hand side, there is a multiplexer. It is kept to select between the charge pump or an external source to control the VCO.
+
+On the top left, there are three frequency dividers. The output from them is the feed-back loop and it goes to the PFD on the bottom left.
+
+The PFD also has the reference clock as input. PFD converts the inputs into the Up or Down signals that control the charge pump at the bottom right.
+
+The output voltage generated by the charge pump in turn controls the VCO and generates the output that we want.
+
+After Charge Pump, we must place the loop filter.
+
+Extract spice netlist and perform the final post layout simulation.
+
+Save that file as a "GDS" file.
+
+The GDS file is the complete layout information that we can send to the fabrication centre to fabricate the IC.
+To write GDS file, go to the file menu and choose the "Write GDS" option.
+This gives us our final IC design in ".gds" format.
+The final PLL layout looks as follows:
 ## Part18 Tapeout theory
 ![](pll_workshop/pll_workshops.png)
 ## Part19 Tapeout labs
@@ -501,17 +607,6 @@ VCO direct input pin is control voltage pin of analog nature. So, we need to con
 Considering this scenarion, we place our design at the top-right corner and make the connections to the pins using wire tool and contact layers.
 ## Acknowledgement
 1. Kunal Ghosh, Co-founder, VSD Corp. Pvt. Ltd. - kunalpghosh@gmail.com
-2. Chinmay panda, IIT Hyderabad
-3. Sameer Durgoji, NIT Karnataka
-4. [Synopsys Team/Company](https://www.synopsys.com/)
-5. https://www.iith.ac.in/events/2022/02/15/Cloud-Based-Analog-IC-Design-Hackathon/
+2. Lakshmi S., MS, Giorgia Institute of Technology
 ## Conclusion
-I. S. Dhanjal. 4 bit carry look ahead adder transistor level
-implementation using static cmos logic.
-https://youtu.be/WItAXzrfPrE
-
-M. Hasan. High-performance design of a 4-bit carry look-ahead adder
-in static cmos logic.
-http://section.iaesonline.com/index.php/IJEEI/article/view/2582
-  
-
+The 2-Day Workshop on Phase-Locked Loop(PLL) IC design introduces its participants to the basics of IC design process, which is particularly important for students and professionals, who intend to pursue a career in Physical Design. The Workshop had a good balance between the theory and practicals. The lectures were short and informative and the labs were sufficiently challenging. The inclusion of assessments at the end was also a good for revision. The overall rigour and depth of the Workshop is highly appreciable.
