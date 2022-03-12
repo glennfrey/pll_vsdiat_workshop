@@ -1,6 +1,6 @@
 # PLL_IC_design_on_open_source_google_skywater_using_130nm_Workshop
 Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
-
+![](pll_workshops.png)
  - [Day 1: PLL Theory and Lab setup](#Day1)
   * [Part 1: Introduction to PLL](#Part1-Introduction-to-PLL)
   * [Part 2: Introduction to Phase Frequency Detector](#Part2-Introduction-to-Phase-Frequency-Detector)
@@ -96,7 +96,7 @@ I will be designing a 4-bit Carry Lookahead Adder by using conventional static C
 ![](analog/CLA_final_waveform4.png)
 ## Part12 Troubleshooting steps
 ## Part13 Layout design
-## Part14 Layout Walkthroug
+## Part14 Layout Walkthrough
 ## Part15 Parasitic Extraction
 ## Part16 Post Layout simulations
 ## Part17 Steps to combine layouts
