@@ -1,7 +1,7 @@
 # PLL_IC_design_on_open_source_google_skywater_using_130nm_Workshop
 Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 
- - [Day 1: PLL Theory and Lab setup](#Day 1: PLL Theory and Lab setup)
+ - [Day 1: PLL Theory and Lab setup](#Day1:-PLL-Theory-and-Lab-setup)
   * [Part 1: Introduction to PLL](#reference-circuit-details)
   * [Part 2: Introduction to Phase Frequency Detector](#reference-circuit-diagram)
   * [Part 3: Introduction to Charge Pump](#reference-circuit-waveform)
