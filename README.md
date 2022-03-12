@@ -26,82 +26,62 @@ Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 
 ## Day1
 Carry Lookahead Adder (CLA) or parallel adder is faster than the normal Full Adder. Unlike normal Full Adder the CLA does not have to wait for the previous carry bit to be calculated. In Carry Lookahead Adder all carry bits are calculated in parallel before calculating the sum. It takes advantage of computational parallelization at the cost of power consumption and circuit complexity. Transistor size must be carefully selected to reach the needed performance.
-
+![](pll_workshop/pll_workshops.png)
 ## Part1 Introduction to PLL
 
 I will be designing a 4-bit Carry Lookahead Adder by using conventional static CMOS. The proposed circuit will be implemented in Synopsys EDA tool and will be done using 28nm technology. Basic element of the circuit is implemented using NMOS and PMOS. Looking at the diagram in Figure 1, the general formula for carry-out bits can be written as: 𝐶𝑖+1 = 𝐶𝑖 (𝐴𝑖 + 𝐵𝑖 ) + 𝐴𝑖𝐵𝑖. Once the carry-out bits have been calculated, the sums are found using the simple XOR operation. Although the equation is similar to equations of 4-bit Ripple Carry Adder (RCA), the transistor level design methodology presented in this section will transform the RCA equations into CLA process.
-
+![](pll_workshop/pll_workshops.png)
 ## Part2 Introduction to Phase Frequency Detector
-![](analog/reference_circuit.png)
+![](pll_workshop/pll_workshops.png)
 
 
 ## Part3 Introduction to Charge Pump
-![](analog/CLA_reference_waveform.png)
+![](pll_workshop/pll_workshops.png)
 
 ## Part4 Introduction to Voltage Controlled Oscillator and Frequency Divider
-![](truth_table.png)
+![](pll_workshop/pll_workshops.png)
 
 
 ## Part5 Tool Setup and Design Flow
-• Synopsys Custom Compiler:
- The Synopsys Custom Compiler™ design environment is a modern solution for full-custom analog, custom digital, and mixed-signal IC design. As the heart of the Synopsys Custom Design Platform, Custom Compiler provides design entry, simulation management and analysis, and custom layout editing features. This tool was used to design the circuit on a transistor level.
- 
- ![custom_compiler](https://user-images.githubusercontent.com/59500283/155473715-c6a1fd5b-71c7-4655-936a-5fe3befabfd8.png)
+![](pll_workshop/pll_workshops.png)
 
-
-• Synopsys Primewave:
- PrimeWave™ Design Environment is a comprehensive and flexible environment for simulation setup and analysis of analog, RF, mixed-signal design, custom-digital and memory designs within the Synopsys Custom Design Platform. This tool helped in various types of simulations of the above designed circuit.
-
-• Synopsys 28nm PDK:
- The Synopsys 28nm Process Design Kit(PDK) was used in creation and simulation of the above designed circuit.
 
 
 ## Part6 Introduction to PDK, specifications and pre-layout circuits
-![](analog/xor_schematic.png)
-![](analog/xo_tb.png)
-![](analog/xor_waveform.png)
+![](pll_workshop/pll_workshops.png)
 
 ## Part7 Circuit design simulation tool Ngspice Setup
-![](analog/CLA_1_schematic.png)
-![](analog/CLA_1_tb.png)
-![](analog/CLA_1_waveform.png)
+![](pll_workshop/pll_workshops.png)
 
 ## Part8 Layout design tool Magic Setup
-![](analog/CLA_2_schematic.png)
-![](analog/CLA_2_tb.png)
-![](analog/CLA_2_waveform.png)
+![](pll_workshop/pll_workshops.png)
 
 ## Day2
-![](analog/CLA_3_schematic.png)
-![](analog/CLA_3_tb.png)
-![](analog/CLA_3_waveform.png)
+![](pll_workshop/pll_workshops.png)
 
 ## Part9 PLL components circuit design
-![](analog/CLA_4_schematic.png)
-![](analog/CLA_4_tb.png)
-![](analog/CLA_4_waveform.png)
-![](analog/CLA_4_waveform1.png)
-![](analog/CLA_4_waveform2.png)
-![](analog/CLA_4_waveform3.png)
+![](pll_workshop/pll_workshops.png)
 
 ## Part10 PLL components circuit simulations
-![](analog/CLA_final_schematic.png)
-![](analog/CLA_final_tb.png)
-![](analog/CLA_final_waveform.png)
-
+![](pll_workshop/pll_workshops.png)
 ## Part11 Steps to combine PLL subcircuits and PLL full design simulation
-![](analog/CLA_final_waveform1.png)
-![](analog/CLA_final_waveform2.png)
-![](analog/CLA_final_waveform3.png)
-![](analog/CLA_final_waveform4.png)
+![](pll_workshop/pll_workshops.png)
 ## Part12 Troubleshooting steps
+![](pll_workshop/pll_workshops.png)
 ## Part13 Layout design
+![](pll_workshop/pll_workshops.png)
 ## Part14 Layout Walkthrough
+![](pll_workshop/pll_workshops.png)
 ## Part15 Parasitic Extraction
+![](pll_workshop/pll_workshops.png)
 ## Part16 Post Layout simulations
+![](pll_workshop/pll_workshops.png)
 ## Part17 Steps to combine layouts
+![](pll_workshop/pll_workshops.png)
 ## Part18 Tapeout theory
+![](pll_workshop/pll_workshops.png)
 ## Part19 Tapeout labs
+![](pll_workshop/pll_workshops.png)
 ```
 
 *  Generated for: PrimeSim
