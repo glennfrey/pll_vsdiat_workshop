@@ -575,12 +575,12 @@ The final PLL layout looks as follows:
 Tapeout means to send our final design to the Fab, after 'preparing' it.
 Steps required in preparing the chip: 
 Caravel Caravel is a template SoC for Efabless Open MPW and chipIgnite shuttles based on the Sky130 node from SkyWater Technologies. 
-![](pll_pll_caravel2.png)
+![](pll_caravel2.png)
 The user project area we see is the area available to us to place our design.
 This is the IC that finally gets fabricated with our design inside it.
 During the first shuttle, the process was to place and design inside the user project area and then meet the connections from the design ports to the user project area pins and then merge that user project area into the Caravel SoC.
 ## Part19 Tapeout labs
-![](pll_pll_caravel.png)
+![](pll_caravel.png)
 Download the layout file for the analog user project area.
 
 Once downloaded, extract it to the directory of your choice.
