@@ -3,26 +3,25 @@ Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 
  - [Day 1: PLL Theory and Lab setup](#Day1)
   * [Part 1: Introduction to PLL](#Part1-Introduction-to-PLL)
-  * [Part 2: Introduction to Phase Frequency Detector](#reference-circuit-diagram)
-  * [Part 3: Introduction to Charge Pump](#reference-circuit-waveform)
-  * [Part 4: Introduction to Voltage Controlled Oscillator and Frequency Divider](#desirable-truth-table)
-  * [Part 5: Tool Setup and Design Flow](#tools-used)
-  * [Part 6: Introduction to PDK, specifications and pre-layout circuits](#tools-used)
-  * [Part 7: Circuit design simulation tool - Ngspice Setup](#tools-used)
-  * [Part 8: Layout design tool - Magic Setup](#tools-used)
-- [Day 2: PLL Labs and post-layout simulations](#simulation-in-synopsys)
-  * [Part 9: PLL components circuit design](#xor_block)
-  * [Part 10: PLL components circuit simulations](#carry_lookahead_bit1_block)
-  * [Part 11: Steps to combine PLL sub-circuits and PLL full design simulation](#carry_lookahead_bit2_block)
-](#carry_lookahead_bit3_block)
-  * [Part 12: Troubleshooting steps](#carry_lookahead_bit4_block)
-  * [Part 13: Layout design](#carry_lookahead_adder_4bit)
-  * [Part 14: Layout Walkthrough](#output-waveform)
-  * [Part 15: Parasitic Extraction](#netlist)
-  * [Part 16: Post Layout simulations](#conclusion)
-  * [Part 17: Steps to combine layouts](#author)
-  * [Part 18: Tapeout theory](#acknowlegement)
-  * [Part 19: Tapeout labs](#references)
+  * [Part 2: Introduction to Phase Frequency Detector](#Part2-Introduction-to-Phase-Frequency-Detector)
+  * [Part 3: Introduction to Charge Pump](#Part3-Introduction-to-Charge-Pump)
+  * [Part 4: Introduction to Voltage Controlled Oscillator and Frequency Divider](#Part4-Introduction-to-Voltage-Controlled-Oscillator-and-Frequency-Divider)
+  * [Part 5: Tool Setup and Design Flow](#Part5-Tool-Setup-and-Design-Flow)
+  * [Part 6: Introduction to PDK, specifications and pre-layout circuits](#Part6-Introduction-to-PDK-specifications-and-pre-layout-circuits)
+  * [Part 7: Circuit design simulation tool Ngspice Setup](#Part7-Circuit-design-simulation-tool-Ngspice-Setup)
+  * [Part 8: Layout design tool Magic Setup](#Part8-Layout-design-tool-Magic-Setup)
+- [Day 2: PLL Labs and post-layout simulations](#Day2)
+  * [Part 9: PLL components circuit design](#Part9-PLL-components-circuit-design)
+  * [Part 10: PLL components circuit simulations](#Part10-PLL-components-circuit-simulations)
+  * [Part 11: Steps to combine PLL sub-circuits and PLL full design simulation](#Part11-Steps-to-combine-PLL-subcircuits-and-PLL-full-design-simulation)
+  * [Part 12: Troubleshooting steps](#Part12-Troubleshooting-steps)
+  * [Part 13: Layout design](#Part13-Layout-design)
+  * [Part 14: Layout Walkthrough](#Part14-Layout-Walkthrough)
+  * [Part 15: Parasitic Extraction](#Part15-Parasitic-Extraction)
+  * [Part 16: Post Layout simulations](#Part16-Post-Layout-simulations)
+  * [Part 17: Steps to combine layouts](#Part17-Steps-to-combine-layouts)
+  * [Part 18: Tapeout theory](#Part18-Tapeout-theory)
+  * [Part 19: Tapeout labs](#Part19-Tapeout-labs)
 
 
 ## Day1
@@ -32,21 +31,18 @@ Carry Lookahead Adder (CLA) or parallel adder is faster than the normal Full Add
 
 I will be designing a 4-bit Carry Lookahead Adder by using conventional static CMOS. The proposed circuit will be implemented in Synopsys EDA tool and will be done using 28nm technology. Basic element of the circuit is implemented using NMOS and PMOS. Looking at the diagram in Figure 1, the general formula for carry-out bits can be written as: 𝐶𝑖+1 = 𝐶𝑖 (𝐴𝑖 + 𝐵𝑖 ) + 𝐴𝑖𝐵𝑖. Once the carry-out bits have been calculated, the sums are found using the simple XOR operation. Although the equation is similar to equations of 4-bit Ripple Carry Adder (RCA), the transistor level design methodology presented in this section will transform the RCA equations into CLA process.
 
-## Reference Circuit Diagram
+## Part2 Introduction to Phase Frequency Detector
 ![](analog/reference_circuit.png)
-##### CLA bit 1-4
-![](analog/CLA_reference_circuit.png)
-##### XOR
-![](analog/xor.png)
 
-## Reference Circuit Waveform
+
+## Part3 Introduction to Charge Pump
 ![](analog/CLA_reference_waveform.png)
 
-## Desirable Truth Table
+## Part4 Introduction to Voltage Controlled Oscillator and Frequency Divider
 ![](truth_table.png)
 
 
-## Tools Used:
+## Part5 Tool Setup and Design Flow
 • Synopsys Custom Compiler:
  The Synopsys Custom Compiler™ design environment is a modern solution for full-custom analog, custom digital, and mixed-signal IC design. As the heart of the Synopsys Custom Design Platform, Custom Compiler provides design entry, simulation management and analysis, and custom layout editing features. This tool was used to design the circuit on a transistor level.
  
@@ -59,28 +55,28 @@ I will be designing a 4-bit Carry Lookahead Adder by using conventional static C
 • Synopsys 28nm PDK:
  The Synopsys 28nm Process Design Kit(PDK) was used in creation and simulation of the above designed circuit.
 
-# Simulation in Synopsys
-## XOR_Block
+
+## Part6 Introduction to PDK, specifications and pre-layout circuits
 ![](analog/xor_schematic.png)
 ![](analog/xo_tb.png)
 ![](analog/xor_waveform.png)
 
-## Carry_Lookahead_bit1_Block
+## Part7 Circuit design simulation tool Ngspice Setup
 ![](analog/CLA_1_schematic.png)
 ![](analog/CLA_1_tb.png)
 ![](analog/CLA_1_waveform.png)
 
-## Carry_Lookahead_bit2_Block
+## Part8 Layout design tool Magic Setup
 ![](analog/CLA_2_schematic.png)
 ![](analog/CLA_2_tb.png)
 ![](analog/CLA_2_waveform.png)
 
-## Carry_Lookahead_bit3_Block
+## Day2
 ![](analog/CLA_3_schematic.png)
 ![](analog/CLA_3_tb.png)
 ![](analog/CLA_3_waveform.png)
 
-## Carry_Lookahead_bit4_Block
+## Part9 PLL components circuit design
 ![](analog/CLA_4_schematic.png)
 ![](analog/CLA_4_tb.png)
 ![](analog/CLA_4_waveform.png)
@@ -88,19 +84,24 @@ I will be designing a 4-bit Carry Lookahead Adder by using conventional static C
 ![](analog/CLA_4_waveform2.png)
 ![](analog/CLA_4_waveform3.png)
 
-## Carry_Lookahead_Adder_4bit
+## Part10 PLL components circuit simulations
 ![](analog/CLA_final_schematic.png)
 ![](analog/CLA_final_tb.png)
 ![](analog/CLA_final_waveform.png)
 
-## Output Waveform
+## Part11 Steps to combine PLL subcircuits and PLL full design simulation
 ![](analog/CLA_final_waveform1.png)
 ![](analog/CLA_final_waveform2.png)
 ![](analog/CLA_final_waveform3.png)
 ![](analog/CLA_final_waveform4.png)
-
-
-## Netlist
+## Part12 Troubleshooting steps
+## Part13 Layout design
+## Part14 Layout Walkthroug
+## Part15 Parasitic Extraction
+## Part16 Post Layout simulations
+## Part17 Steps to combine layouts
+## Part18 Tapeout theory
+## Part19 Tapeout labs
 ```
 
 *  Generated for: PrimeSim
