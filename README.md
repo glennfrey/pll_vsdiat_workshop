@@ -55,7 +55,7 @@ I will be designing a 4-bit Carry Lookahead Adder by using conventional static C
 
 ## Part6 Introduction to PDK, specifications and pre-layout circuits
 ![](theory/1.6PLL_Specifications.png)
-![](theory/1.6PLL_Specifications.png)
+![]skywater_pdk.png)
 
 ## Part7 Circuit design simulation tool Ngspice Setup
 ![](pll_workshop/PFD_files.png)
