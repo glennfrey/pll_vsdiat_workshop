@@ -67,7 +67,9 @@ I will be designing a 4-bit Carry Lookahead Adder by using conventional static C
 ![](pll_workshop/pll_workshops.png)
 
 ## Part9 PLL components circuit design
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/FD_cir.png)
+
+```
 .include sky130nm.lib
 
 xm1 1 2 3 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
@@ -98,9 +100,11 @@ plot v(6) v(Clk)+2
 .endc
 
 .end
-
+```
+![](pll_workshop/FD_waveform.png)
 ## Part10 PLL components circuit simulations
 ![](pll_workshop/CP_cir.png)
+```
 .include sky130nm.lib
 
 xm43 3 2 1 1 sky130_fd_pr__pfet_01v8 l=150n w=5.4u 
@@ -141,8 +145,10 @@ plot v(out) C(out)
 .endc
 
 .end
+```
 ![](pll_workshop/CP_waveform.png)
 ![](pll_workshop/CP_waveform2.png)
+```
 .include sky130nm.lib
 
 xm1 10 16 3 10 sky130_fd_pr__pfet_01v8 l=150n w=420n
@@ -190,9 +196,10 @@ plot v(in) v(11)
 *plot mag(v(14))
 .endc
 .end
-
+```
 ![](pll_workshop/VCO_cir.png)
 ![](pll_workshop/VCO_waveform.png)
+```
 .include sky130nm.lib
 
 xm1 1 2 3 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
@@ -223,286 +230,282 @@ plot v(6) v(Clk)+2
 .endc
 
 .end
-
+```
 ![](pll_workshop/PD_cir.png)
 ![](pll_workshop/PD_waveform.png)
 ## Part11 Steps to combine PLL subcircuits and PLL full design simulation
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/pll_cir.png)
+```
+.include sky130nm.lib
+
+xx1 Clk_Ref Clk_Out_by_8 up down pd
+xx2 up down VCtrl cp
+
+*Loop Filter
+r1 VCtrl rc1 490
+c1 rc1 0 355f
+r2 rc1 rc2 490
+c2 VCtrl 0 350f
+r3 rc2 rc3 490
+c3 rc3 0 345f
+ 
+xx3 rc3 Clk_Out vco
+
+xx4 Clk_Out Clk_Out_by_2 fd
+xx5 Clk_Out_by_2 Clk_Out_by_4 fd
+xx6 Clk_Out_by_4 Clk_Out_by_8 fd
+
+v1 Clk_Ref 0 PULSE 0 1.8 0 6ps 6ps 40ns 80ns
+
+.ic v(VCtrl) = 0
+.ic v(Clk_Out_by_2) = 0
+.ic v(Clk_Out_by_4) = 1.8
+.ic v(Clk_Out_by_8) = 0
+.control
+tran 0.1ns 180us
+plot v(Clk_Ref) v(Clk_Out_by_8) v(Clk_Out_by_4)+2 v(Clk_Out_by_2)+4 v(Clk_Out)+6 v(up)+8 v(down)+10 v(VCtrl)+12
+.endc
+
+*PFD
+.subckt pd Clk1 Clk2 up down 
+xm1 1 clk1 3 1 sky130_fd_pr__pfet_01v8 l=150n w=640n 
+xm2 3 clk1 4 0 sky130_fd_pr__nfet_01v8 l=150n w=1800n
+xm3 4 clk2 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+
+xm4 1 clk2 6 1 sky130_fd_pr__pfet_01v8 l=150n w=640n 
+xm5 6 clk2 7 0 sky130_fd_pr__nfet_01v8 l=150n w=1800n
+xm6 7 clk1 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+
+xm7 8 clk1 3 0 sky130_fd_pr__nfet_01v8 l=150n w=2400n 
+xm8 clk1 clk1 8 1 sky130_fd_pr__pfet_01v8 l=150n w=640n
+
+xm11 upb 8 1 1 sky130_fd_pr__pfet_01v8 l=150n w=720n
+xm12 upb 8 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+
+xm15 up upb 1 1 sky130_fd_pr__pfet_01v8 l=150n w=720n
+xm16 up upb 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+  
+xm9 9 clk2 6 0 sky130_fd_pr__nfet_01v8 l=150n w=2400n
+xm10 clk2 clk2 9 1 sky130_fd_pr__pfet_01v8 l=150n w=640n
+
+xm13 downb 9 1 1 sky130_fd_pr__pfet_01v8 l=150n w=720n
+xm14 downb 9 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+
+xm17 down downb 1 1 sky130_fd_pr__pfet_01v8 l=150n w=720n
+xm18 down downb 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+
+
+*output cap
+*c1 up 0 6f
+*c2 down 0 6f
+
+v1 1 0 1.8
+.ends pd
+
+
+*CP
+.subckt cp up down out
+xm43 3 2 1 1 sky130_fd_pr__pfet_01v8 l=150n w=18u 
+xm44 out downb 3 1 sky130_fd_pr__pfet_01v8 l=150n w=420n 
+xm31 out up 7 0 sky130_fd_pr__nfet_01v8 l=150n w=420n
+xm32 7 8 0 0 sky130_fd_pr__nfet_01v8 l=150n w=4.8u
+
+xm33 2 2 1 1 sky130_fd_pr__pfet_01v8 l=150n w=420n 
+xm34 8 8 0 0 sky130_fd_pr__nfet_01v8 l=150n w=420n
+
+xm35 9 down 3 1 sky130_fd_pr__pfet_01v8 l=150n w=5400n 
+xm36 9 9 0 0 sky130_fd_pr__nfet_01v8 l=150n w=420n
+
+xm37 10 10 1 1 sky130_fd_pr__pfet_01v8 l=150n w=420n 
+xm38 10 upb 7 0 sky130_fd_pr__nfet_01v8 l=150n w=5400n
+
+xm39 1 down downb 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
+xm40 0 down downb 0 sky130_fd_pr__nfet_01v8 l=150n w=360n 
+
+xm41 1 up upb 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
+xm42 0 up upb 0 sky130_fd_pr__nfet_01v8 l=150n w=360n 
+
+*r1 out rc 200
+*c1 rc 0 8f
+
+v1 1 0 1.8
+.ends cp
+
+
+*VCO
+.subckt vco in 17
+xm1 10 16 3 10 sky130_fd_pr__pfet_01v8 l=150n w=420n
+xm2 3 16 9 9  sky130_fd_pr__nfet_01v8 l=150n w=420n
+
+xm3 10 3 4 10 sky130_fd_pr__pfet_01v8 l=150n w=420n
+xm4 4 3 9 9 sky130_fd_pr__nfet_01v8 l=150n w=420n
+
+xm5 10 4 12 10 sky130_fd_pr__pfet_01v8 l=150n w=420n
+xm6 12 4 9 9 sky130_fd_pr__nfet_01v8 l=150n w=420n
+
+xm11 10 12 13 10 sky130_fd_pr__pfet_01v8 l=150n w=420n
+xm12 13 12 9 9 sky130_fd_pr__nfet_01v8 l=150n w=420n
+
+xm13 10 13 14 10 sky130_fd_pr__pfet_01v8 l=150n w=420n
+xm14 14 13 9 9 sky130_fd_pr__nfet_01v8 l=150n w=420n
+
+xm15 10 14 15 10 sky130_fd_pr__pfet_01v8 l=150n w=420n
+xm16 15 14 9 9 sky130_fd_pr__nfet_01v8 l=150n w=420n
+
+xm17 10 15 16 10 sky130_fd_pr__pfet_01v8 l=150n w=2400n
+xm18 16 15 9 9 sky130_fd_pr__nfet_01v8 l=150n w=1200n
+
+xm7 10 5 1 1 sky130_fd_pr__pfet_01v8 l=150n w=1080n
+xm8 5 5 1 1 sky130_fd_pr__pfet_01v8 l=150n w=840n
+xm9 5 in 0 0 sky130_fd_pr__nfet_01v8 l=150n w=840n
+xm10 9 in 0 0 sky130_fd_pr__nfet_01v8 l=150n w=1080n
+
+xm19 1 16 11 1 sky130_fd_pr__pfet_01v8 l=150n w=720n
+xm20 11 16 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+
+xm21 1 11 17 1 sky130_fd_pr__pfet_01v8 l=150n w=720n
+xm22 17 11 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+
+*c1 11 0 24f
+v1 1 0 1.8
+.ends vco
+
+
+*FD
+.subckt fd Clk 10
+
+xm1 1 2 3 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
+xm2 0 2 3 0 sky130_fd_pr__nfet_01v8 l=150n w=360n 
+
+xm3 3 Clkb 4 1 sky130_fd_pr__pfet_01v8 l=150n w=420n 
+xm4 3 Clk 4 0 sky130_fd_pr__nfet_01v8 l=150n w=840n 
+
+xm7 1 4 5 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
+xm8 0 4 5 0 sky130_fd_pr__nfet_01v8 l=150n w=360n 
+
+xm9 5 Clk 6 1 sky130_fd_pr__pfet_01v8 l=150n w=420n 
+xm10 5 Clkb 6 0 sky130_fd_pr__nfet_01v8 l=150n w=640n 
+
+xm11 1 6 2 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
+xm12 0 6 2 0 sky130_fd_pr__nfet_01v8 l=150n w=360n 
+
+xm13 1 Clk Clkb 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
+xm14 0 Clk Clkb 0 sky130_fd_pr__nfet_01v8 l=150n w=360n 
+
+xm15 7 6 1 1 sky130_fd_pr__pfet_01v8 l=150n w=720n 
+xm16 7 6 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n
+
+xm19 1 7 10 1 sky130_fd_pr__pfet_01v8 l=150n w=720n
+xm20 10 7 0 0 sky130_fd_pr__nfet_01v8 l=150n w=360n 
+
+
+*c1 7 0 18f
+v1 1 0 1.8
+.ends fd
+.end
+```
+
+![](pll_workshop/pll_waveform.png)
+![](pll_workshop/pll_waveform2.png)
 ## Part12 Troubleshooting steps
-![](pll_workshop/pll_workshops.png)
+Observe the kinds of issue faced.
+Debug individual components fully before trying to debug the combined simulation.
+Check if any signals are coming flat or if the simulation is crashing. If this is the case then check if all the connections are done properly. Also check if there are any issues like wrong naming, capitalization issues or parameter value issues.
+If the signals are right but the mimicking is not happening then verify the following:
+For what range of frequencies is the VCO working properly: Is our required output frequency range lying in the VCO's working range.
+Is the Phase Frequency Detector able to detect the differences: If the phase difference is very small, the PFD might not be able to detect it.
+Is the rate of Charge Pump output charging and discharging fast: Is it too fast or too slow? Is there too much fluctuations in charging or discharging? This means that the transistor sizing is the thing to pay attention to. Check the response of the CP when 0V is given as the input. If it is still charging then the charge leakage is the issue.
+Whether the loop filter values are working out: This can be found out using the thumb rules.
 ## Part13 Layout design
-![](pll_workshop/pll_workshops.png)
+The way to draw here in magic is first to make a box and then fill it with a material.
+
+By left clicking, we fix the left bottom corner of the box.
+
+By right clicking, we fix the right top corner of the box.
+
+If we hover upon a layer (layers panel is present on the right hand side of the window), we can see the name of the layer on the top right corner of the screen.
+
+By middle clicking on a layer, the box gets filled by the selected layer.
+
+Materials needed for the transistors:
+
+P-diffusion for the PMOS and N-diffusion for the NMOS.
+For the gate, polysilicon layer is needed.
+DRC error means that there is a size issue or a closeness issue. To know what exactly the issue is, select some part of the error region and press the "?" button on the keyboard and then the error will show up on the "magic command window".
+
+Before creating a PMOS, we must create an N-Well region and then place the PMOS over it.
+
+To copy a transistor, make a box around the transistor and press "A" button on the keyboard. Now, place the cursor where we wish to copy it and press "C" button. If we press the "M" button then it becomes the move operation.
+
+For placing Vdd and ground, place the metal1 layer.
+
+To connect two transistors, use the loacal interconnect layer (locali) like a wire.
+
+To connect two layers, look for contact layers in the tray. They are represented with a cross symbol.
+
+As long as we do not connect a contact, two different layers will not touch even if they overlap.
+
+If we get a DRC error at this point it means that either the size of the contact is too small or the region of metal1 and local interconnect around the contact is not enough.
+
+To create a label, draw a line around the edge of the layer that we want to label. A line is drawn by making a box of zero thickness. Type the command label name in the magic command window. Name can be any name to be used as label.
+
+To make a port, draw a box around the label and type port make in the magic command window.
+
+We need to make ports because when we extract the parasitics from our design, the input and output ports will automatically have these names as we have labelled them as ports.
 ## Part14 Layout Walkthrough
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/FD_layout.png)
+![](pll_workshop/CP_layout.png)
+![](pll_workshop/VCO_layout.png)
+![](pll_workshop/PFD_layout.png)
 ## Part15 Parasitic Extraction
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/PFD_layoutspice.png)
 ## Part16 Post Layout simulations
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/PFD_postwaveform.png)
+![](pll_workshop/PFD_postwaveform2.png)
 ## Part17 Steps to combine layouts
-![](pll_workshop/pll_workshops.png)
+![](pll_workshop/PLL_layout.png)
 ## Part18 Tapeout theory
 ![](pll_workshop/pll_workshops.png)
 ## Part19 Tapeout labs
 ![](pll_workshop/pll_workshops.png)
-```
+Download the layout file for the analog user project area.
 
-*  Generated for: PrimeSim
-*  Design library name: glenn_DAC_new
-*  Design cell name: glenn_CLAfinal_tb
-*  Design view name: schematic
-.lib 'saed32nm.lib' TT
+Once downloaded, extract it to the directory of your choice.
 
-*Custom Compiler Version S-2021.09
-*Sat Feb 26 09:55:29 2022
+Now, open it with magic and the technology file sky130A.tech
 
-.global gnd!
-********************************************************************************
-* Library          : glenn_DAC_new
-* Cell             : glenn_xor_new
-* View             : schematic
-* View Search List : hspice hspiceD schematic spice veriloga
-* View Stop List   : hspice hspiceD
-********************************************************************************
-.subckt glenn_xor_new a b sum vdda vssa
-xm5 net53 a vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm4 net52 b vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm3 sum net52 net13 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm2 net13 a vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm1 sum net53 net5 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm0 net5 b vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm11 net53 a vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm10 net52 b vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm9 net37 a vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm8 sum b net37 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm7 net29 net53 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm6 sum net52 net29 vssa n105 w=0.1u l=0.03u nf=1 m=1
-.ends glenn_xor_new
+Place the design in the user project area and make the connections with the pins.
 
-********************************************************************************
-* Library          : glenn_DAC_new
-* Cell             : glenn_CLA1
-* View             : schematic
-* View Search List : hspice hspiceD schematic spice veriloga
-* View Stop List   : hspice hspiceD
-********************************************************************************
-.subckt glenn_cla1 a b c c1 vdda vssa
-xm5 c1 net54 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm4 net54 b net17 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm3 net17 a vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm2 net54 a net9 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm1 net54 b net9 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm0 net9 c vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm11 net45 a vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm10 net54 b net45 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm9 net54 b vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm8 net33 c vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm7 net54 a net33 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm6 c1 net54 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-.ends glenn_cla1
+It is important to not that one must not move any of the pins that they have given from their location. We only use the pins that we need and connect our design to them.
 
-********************************************************************************
-* Library          : glenn_DAC_new
-* Cell             : glenn_CLA2
-* View             : schematic
-* View Search List : hspice hspiceD schematic spice veriloga
-* View Stop List   : hspice hspiceD
-********************************************************************************
-.subckt glenn_cla2 a0 a1 b0 b1 c0 c2 vdda vssa
-xm9 c2 net80 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm8 net80 a1 net33 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm7 net33 a0 net27 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm6 net27 c0 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm5 net33 b0 net27 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm4 net80 b1 net33 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm3 net33 b0 net13 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm2 net13 a0 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm1 net80 b1 net5 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm0 net5 a1 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm19 c2 net80 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm18 net73 c0 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm17 net69 a0 net73 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm16 net80 a1 net69 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm15 net69 b0 net73 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm14 net57 a0 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm13 net69 b0 net57 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm12 net80 b1 net69 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm11 net45 a1 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm10 net80 b1 net45 vssa n105 w=0.1u l=0.03u nf=1 m=1
-.ends glenn_cla2
+At the bottom of the user project area are the wishful ports.
 
-********************************************************************************
-* Library          : glenn_DAC_new
-* Cell             : glenn_CLA3
-* View             : schematic
-* View Search List : hspice hspiceD schematic spice veriloga
-* View Stop List   : hspice hspiceD
-********************************************************************************
-.subckt glenn_cla3 a0 a1 a2 b0 b1 b2 c0 c3 vdda vssa
-xm13 net77 b2 net53 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm12 net53 a2 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm11 net77 b2 net45 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm10 net45 b1 net41 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm9 net41 a1 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm8 net45 b1 net33 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm7 net33 b0 net115 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm6 net115 a0 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm5 net33 b0 net29 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm4 c3 net77 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm3 net77 a2 net45 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm2 net45 a1 net33 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm1 net33 a0 net29 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm0 net29 c0 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm27 net109 a2 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm26 net105 a1 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm25 net101 b1 net105 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm24 net97 a0 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm23 net93 b0 net97 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm22 net89 c0 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm21 net93 a0 net89 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm20 net101 a1 net93 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm19 net77 b2 net109 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm18 net77 b2 net101 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm17 net101 b1 net93 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm16 net93 b0 net89 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm15 c3 net77 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm14 net77 a2 net101 vssa n105 w=0.1u l=0.03u nf=1 m=1
-.ends glenn_cla3
+Along the left of the user project area are the input-output ports and some power ports like Vdd and Vss.
 
-********************************************************************************
-* Library          : glenn_DAC_new
-* Cell             : glenn_CLA4
-* View             : schematic
-* View Search List : hspice hspiceD schematic spice veriloga
-* View Stop List   : hspice hspiceD
-********************************************************************************
-.subckt glenn_cla4 a0 a1 a2 a3 b0 b1 b2 b3 c0 vdda vssa vout
-xm17 net109 b3 net69 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm16 net69 a3 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm15 net109 b3 net61 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm14 net61 b2 net57 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm13 net57 a2 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm12 net51 a1 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm11 net47 b1 net51 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm10 net61 b2 net47 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm9 net47 b1 net37 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm8 net37 b0 net33 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm7 net33 a0 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm6 net37 b0 net5 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm5 vout net109 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm4 net109 a3 net61 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm3 net61 a2 net47 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm2 net47 a1 net37 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm1 net37 a0 net5 vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm0 net5 c0 vdda vdda p105 w=0.1u l=0.03u nf=1 m=1
-xm35 net133 b0 net89 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm34 net137 a0 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm33 net133 b0 net137 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm32 net113 b1 net133 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm31 net125 a1 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm30 net121 a3 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm29 net117 a2 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm28 net113 b1 net125 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm27 net109 b3 net121 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm26 net105 b2 net117 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm25 net109 b3 net105 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm24 net105 b2 net113 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm23 vout net109 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm22 net89 c0 vssa vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm21 net133 a0 net89 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm20 net113 a1 net133 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm19 net105 a2 net113 vssa n105 w=0.1u l=0.03u nf=1 m=1
-xm18 net109 a3 net105 vssa n105 w=0.1u l=0.03u nf=1 m=1
-.ends glenn_cla4
+Along the right of the user project area are a few more input-output ports and power ports like Vccd, Vssd, Vcca and Vssa.
 
-********************************************************************************
-* Library          : glenn_DAC_new
-* Cell             : glenn_CLAfinal
-* View             : schematic
-* View Search List : hspice hspiceD schematic spice veriloga
-* View Stop List   : hspice hspiceD
-********************************************************************************
-.subckt glenn_clafinal a0 a1 a2 a3 b0 b1 b2 b3 c0 c4 s0 s1 s2 s3 vdda vssa
-xi3 a3 b3 net135 vdda vssa glenn_xor_new
-xi0 a2 b2 net136 vdda vssa glenn_xor_new
-xi4 net135 net141 s3 vdda vssa glenn_xor_new
-xi28 a0 b0 net149 vdda vssa glenn_xor_new
-xi1 a1 b1 net137 vdda vssa glenn_xor_new
-xi29 c0 net149 s0 vdda vssa glenn_xor_new
-xi6 net163 net137 s1 vdda vssa glenn_xor_new
-xi5 net139 net136 s2 vdda vssa glenn_xor_new
-xi8 a0 b0 c0 net163 vdda vssa glenn_cla1
-xi9 a0 a1 b0 b1 c0 net139 vdda vssa glenn_cla2
-xi10 a0 a1 a2 b0 b1 b2 c0 net141 vdda vssa glenn_cla3
-xi11 a0 a1 a2 a3 b0 b1 b2 b3 c0 vdda vssa c4 glenn_cla4
-.ends glenn_clafinal
+At the top of the user project area are the analog input-output pins.
 
-********************************************************************************
-* Library          : glenn_DAC_new
-* Cell             : glenn_CLAfinal_tb
-* View             : schematic
-* View Search List : hspice hspiceD schematic spice veriloga
-* View Stop List   : hspice hspiceD
-********************************************************************************
-xi0 a0 a1 a2 a3 b0 b1 b2 b3 c0 c4 s0 s1 s2 s3 net35 gnd! glenn_clafinal
-v25 c0 gnd! dc=0 pulse ( 0 1 0 .1u .1u 320u 640u )
-v24 b3 gnd! dc=0 pulse ( 0 1 0 .1u .1u 160u 320u )
-v23 b2 gnd! dc=0 pulse ( 0 1 0 .1u .1u 80u 160u )
-v22 b1 gnd! dc=0 pulse ( 0 1 0 .1u .1u 40u 80u )
-v21 b0 gnd! dc=0 pulse ( 0 1 0 .1u .1u 20u 40u )
-v20 a3 gnd! dc=0 pulse ( 0 1 0 .1u .1u 10u 20u )
-v19 a2 gnd! dc=0 pulse ( 0 1 0 .1u .1u 5u 10u )
-v18 a1 gnd! dc=0 pulse ( 0 1 0 .1u .1u 2.5u 5u )
-v17 a0 gnd! dc=0 pulse ( 0 1 0 .1u .1u 1.25u 2.5u )
-v26 net35 gnd! dc=1
-c15 c4 gnd! c=1p
-c14 s0 gnd! c=1p
-c13 s1 gnd! c=1p
-c12 s2 gnd! c=1p
-c11 s3 gnd! c=1p
+In our design, we have five pins:
 
+Enable pins for CP and VCO.
+Reference clock input pin.
+Output clock pin.
+VCO direct input pin.
+The enable pins are connected to the digital input-output pins.
 
+Reference clock input pin and output clock pin are also digital and so we connect them to the digital input-output pins.
 
+VCO direct input pin is control voltage pin of analog nature. So, we need to connect it to an analog input-output pin.
 
-
-
-
-
-.tran '1u' '640u' name=tran
-
-.option primesim_remove_probe_prefix = 0
-.probe v(*) i(*) level=1
-.probe tran v(a0) v(a1) v(a2) v(a3) v(b0) v(b1) v(b2) v(b3) v(c0) v(c4) v(s0)
-+ v(s1) v(s2) v(s3)
-
-.temp 25
-
-
-
-.option primesim_output=wdf
-
-
-.option parhier = LOCAL
-
-
-
-
-
-
-.end
-
-
-```
-
-
-## Author
-Glenn Frey Olamit , self.
+Considering this scenarion, we place our design at the top-right corner and make the connections to the pins using wire tool and contact layers.
 ## Acknowledgement
 1. Kunal Ghosh, Co-founder, VSD Corp. Pvt. Ltd. - kunalpghosh@gmail.com
 2. Chinmay panda, IIT Hyderabad
 3. Sameer Durgoji, NIT Karnataka
 4. [Synopsys Team/Company](https://www.synopsys.com/)
 5. https://www.iith.ac.in/events/2022/02/15/Cloud-Based-Analog-IC-Design-Hackathon/
-## References
+## Conclusion
 I. S. Dhanjal. 4 bit carry look ahead adder transistor level
 implementation using static cmos logic.
 https://youtu.be/WItAXzrfPrE
