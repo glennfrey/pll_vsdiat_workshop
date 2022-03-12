@@ -1,4 +1,4 @@
-# PLL_IC_design_on_open_source_google_skywater_using_130nm_Workshop
+# Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 ![](pll_workshops.png)
  - [Day 1: PLL Theory and Lab setup](#Day1)
@@ -571,9 +571,16 @@ To write GDS file, go to the file menu and choose the "Write GDS" option.
 This gives us our final IC design in ".gds" format.
 The final PLL layout looks as follows:
 ## Part18 Tapeout theory
-![](pll_workshop/pll_workshops.png)
+![](pll_tapeouts.png)
+Tapeout means to send our final design to the Fab, after 'preparing' it.
+Steps required in preparing the chip: 
+Caravel Caravel is a template SoC for Efabless Open MPW and chipIgnite shuttles based on the Sky130 node from SkyWater Technologies. 
+![](pll_pll_caravel2.png)
+The user project area we see is the area available to us to place our design.
+This is the IC that finally gets fabricated with our design inside it.
+During the first shuttle, the process was to place and design inside the user project area and then meet the connections from the design ports to the user project area pins and then merge that user project area into the Caravel SoC.
 ## Part19 Tapeout labs
-![](pll_workshop/pll_workshops.png)
+![](pll_pll_caravel.png)
 Download the layout file for the analog user project area.
 
 Once downloaded, extract it to the directory of your choice.
