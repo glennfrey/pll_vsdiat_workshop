@@ -2,7 +2,7 @@
 Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 
  - [Day 1: PLL Theory and Lab setup](#Day1)
-  * [Part 1: Introduction to PLL](#Part1Introduction-to-PLL)
+  * [Part 1: Introduction to PLL](#Part1-Introduction-to-PLL)
   * [Part 2: Introduction to Phase Frequency Detector](#reference-circuit-diagram)
   * [Part 3: Introduction to Charge Pump](#reference-circuit-waveform)
   * [Part 4: Introduction to Voltage Controlled Oscillator and Frequency Divider](#desirable-truth-table)
