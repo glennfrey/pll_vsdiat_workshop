@@ -2,7 +2,7 @@
 Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 
  - [Day 1: PLL Theory and Lab setup](#Day1)
-  * [Part 1: Introduction to PLL](#reference-circuit-details)
+  * [Part 1: Introduction to PLL](#Part1Introduction-to-PLL)
   * [Part 2: Introduction to Phase Frequency Detector](#reference-circuit-diagram)
   * [Part 3: Introduction to Charge Pump](#reference-circuit-waveform)
   * [Part 4: Introduction to Voltage Controlled Oscillator and Frequency Divider](#desirable-truth-table)
@@ -28,7 +28,7 @@ Phase-Locked Loop(PLL) IC design on Open-Source Google-Skywater 130nm Workshop
 ## Day1
 Carry Lookahead Adder (CLA) or parallel adder is faster than the normal Full Adder. Unlike normal Full Adder the CLA does not have to wait for the previous carry bit to be calculated. In Carry Lookahead Adder all carry bits are calculated in parallel before calculating the sum. It takes advantage of computational parallelization at the cost of power consumption and circuit complexity. Transistor size must be carefully selected to reach the needed performance.
 
-## Reference Circuit Details
+## Part 1: Introduction to PLL
 
 I will be designing a 4-bit Carry Lookahead Adder by using conventional static CMOS. The proposed circuit will be implemented in Synopsys EDA tool and will be done using 28nm technology. Basic element of the circuit is implemented using NMOS and PMOS. Looking at the diagram in Figure 1, the general formula for carry-out bits can be written as: 𝐶𝑖+1 = 𝐶𝑖 (𝐴𝑖 + 𝐵𝑖 ) + 𝐴𝑖𝐵𝑖. Once the carry-out bits have been calculated, the sums are found using the simple XOR operation. Although the equation is similar to equations of 4-bit Ripple Carry Adder (RCA), the transistor level design methodology presented in this section will transform the RCA equations into CLA process.
 
